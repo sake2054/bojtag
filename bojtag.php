@@ -34,7 +34,9 @@ function get_http_response_code($url) {
 	return substr($headers[0], 9, 3);
 }
 
-// 솔브드 티어를 리턴합니다. 배열은 [0] = 티어, [1] = 티어 이름, [2] = 티어 색상입니다.
+// 솔브드 티어를 리턴합니다. 배열은 [0] = 티어를 0~31까지의 숫자로 나타낸 값, [1] = 티어 이름, [2] = 티어 색상(css용)입니다.
+// TODO 새싹티어 이쁘게 바꾸기
+
 function solved_tier( $arg ) {
 	if ( $arg == '-1' || $arg == 'nr' ) {
 		$tier = array('nr', 'Not Ratable', 'nr');
@@ -108,10 +110,10 @@ function solved_tier( $arg ) {
 	return $tier;
 }
 
-// Add Shortcode
+// 쇼트코드
 function bojtag( $atts ) {
 
-	// Attributes
+	// Attribute 값 가져오기, l, r, t, u 중 하나, s, re는 있어도 되고 없어도 됨
 	$atts = shortcode_atts(
 		array(
 			'l' => '',
@@ -262,6 +264,7 @@ function bojtag( $atts ) {
 
 add_shortcode( 'boj', 'bojtag' );
 
+// CSS 적용하기
 wp_register_style( 'boj-style', plugins_url('style.css', __FILE__) );
 wp_enqueue_style( 'boj-style' );
 
