@@ -234,7 +234,7 @@ function bojtag( $atts ) {
 	} elseif ($atts['u'] !== '') {
 
 		$handle = $atts['u'];
-		$file = $_SERVER['DOCUMENT_ROOT'].'/wp-content/plugins/bojtag/users/'.$handle.'.json';
+		$file = __DIR__.'/users/'.$handle.'.json';
 		$solvedurl = 'https://solved.ac/api/v3/user/show?handle='.$handle;
 		
 		if (file_exists($file)) {
