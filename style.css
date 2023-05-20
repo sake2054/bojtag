@@ -116,6 +116,10 @@
 	-webkit-background-clip: text;
     background-repeat: repeat;
 }
+.boj-t-text-admin {
+	font-weight: bold;
+	color: #17ce3a;
+}
 .boj-u {
 	box-shadow: none !important;
 	white-space: nowrap;
