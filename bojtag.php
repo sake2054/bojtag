@@ -16,7 +16,7 @@
  * Plugin Name:       BOJ Tag
  * Plugin URI:        https://blog.sakede.su
  * Description:       백준 온라인 저지(BOJ)와 solved.ac의 태그를 표시합니다.
- * Version:           r230518a
+ * Version:           r230520a
  * Author:            Sake
  * Author URI:        https://blog.sakede.su
  * License:           MIT
