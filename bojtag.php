@@ -16,7 +16,7 @@
  * Plugin Name:       BOJ Tag
  * Plugin URI:        https://blog.sakede.su
  * Description:       백준 온라인 저지(BOJ)와 solved.ac의 태그를 표시합니다.
- * Version:           r230520a
+ * Version:           r230521a
  * Author:            Sake
  * Author URI:        https://blog.sakede.su
  * License:           MIT
@@ -237,7 +237,13 @@ function bojtag( $atts ) {
 		$file = __DIR__.'/users/'.$handle.'.json';
 		$solvedurl = 'https://solved.ac/api/v3/user/show?handle='.$handle;
 		
-		if (file_exists($file)) {
+		if ($handle == 'solvedac') { // solvedac 계정
+			if ($atts['s'] == 1) {
+				return '<a href="https://solved.ac/profile/solvedac" target="_blank" class="boj-u"><img src="https://static.solved.ac/tier_small/admin.svg" class="boj-t-img"><span>&nbsp;</span><img src="https://static.solved.ac/uploads/profile/64x64/c6ee5f2d3a85d783ca494e77423bb5d295bbc534.png" class="boj-u-profile"><span class="boj-t-text-admin">&nbsp;solvedac</span></a>';
+			} else {
+				return '<a href="https://solved.ac/profile/solvedac" target="_blank" class="boj-u"><img src="https://static.solved.ac/tier_small/admin.svg" class="boj-t-img"><span class="boj-t-text-admin">&nbsp;solvedac</span></a>';
+			}
+		} else if (file_exists($file)) {
 			$filetime = filemtime($file);
 			$now = time();
 			if ( ($now - $filetime) >= 86400 ) {
