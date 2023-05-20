@@ -256,7 +256,18 @@ function bojtag( $atts ) {
 		$info = json_decode(file_get_contents($file), true);
 		$t = solved_tier($info['tier']);
 
-		return '<a href="https://solved.ac/profile/'.$handle.'" target="_blank" class="boj-u"><img src="https://static.solved.ac/tier_small/'.$info['tier'].'.svg" class="boj-t-img"><span class="boj-t-text-'.$t[2].'">&nbsp;'.$handle.'</span></a>';
+		if ($atts['s'] == '1') {
+			$profileImage = $info['profileImageUrl'];
+			if ($profileImage == null) {
+				$profileImage = 'https://static.solved.ac/misc/64x64/default_profile.png';
+			} else {
+				$profileImage = 'https://static.solved.ac/uploads/profile/64x64/'.substr($profileImage, 41);
+			}
+
+			return '<a href="https://solved.ac/profile/'.$handle.'" target="_blank" class="boj-u"><img src="https://static.solved.ac/tier_small/'.$info['tier'].'.svg" class="boj-t-img"><span>&nbsp;</span><img src="'.$profileImage.'" class="boj-u-profile"><span class="boj-t-text-'.$t[2].'">&nbsp;'.$handle.'</span></a>';
+		} else {
+			return '<a href="https://solved.ac/profile/'.$handle.'" target="_blank" class="boj-u"><img src="https://static.solved.ac/tier_small/'.$info['tier'].'.svg" class="boj-t-img"><span class="boj-t-text-'.$t[2].'">&nbsp;'.$handle.'</span></a>';
+		}
 		
 	}
 

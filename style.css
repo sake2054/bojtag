@@ -120,3 +120,12 @@
 	box-shadow: none !important;
 	white-space: nowrap;
 }
+.boj-u-profile {
+	display: inline !important;
+	line-height: inherit;
+	width: 20px;
+	height: 20px;
+	vertical-align: middle;
+	background-color: rgb(0, 0, 0);
+	border-radius: 50%;
+}
