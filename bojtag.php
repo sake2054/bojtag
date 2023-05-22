@@ -16,7 +16,7 @@
  * Plugin Name:       BOJ Tag
  * Plugin URI:        https://blog.sakede.su
  * Description:       백준 온라인 저지(BOJ)와 solved.ac의 태그를 표시합니다.
- * Version:           r230521a
+ * Version:           r230521b
  * Author:            Sake
  * Author URI:        https://blog.sakede.su
  * License:           MIT
@@ -36,7 +36,6 @@ function get_http_response_code($url) {
 
 // 솔브드 티어를 리턴합니다. 배열은 [0] = 티어를 0~31까지의 숫자로 나타낸 값, [1] = 티어 이름, [2] = 티어 색상(css용)입니다.
 // TODO 새싹티어 이쁘게 바꾸기
-
 function solved_tier( $arg ) {
 	if ( $arg == '-1' || $arg == 'nr' ) {
 		$tier = array('nr', 'Not Ratable', 'nr');
@@ -251,8 +250,8 @@ function bojtag( $atts ) {
 				file_put_contents($file, $userinfo);
 			}
 		} else {
-			if (get_http_response_code($solvedurl) == '404') {
-				return 'NOT FOUND :(';
+			if (get_http_response_code($solvedurl) != '200') {
+				return 'ERROR :(';
 			} else {
 				$userinfo = file_get_contents($solvedurl);
 				file_put_contents($file, $userinfo);
@@ -282,7 +281,7 @@ function bojtag( $atts ) {
 add_shortcode( 'boj', 'bojtag' );
 
 // CSS 적용하기
-wp_register_style( 'boj-style', plugins_url('style.css', __FILE__) );
+wp_register_style( 'boj-style', plugins_url('style.css', __FILE__), array(), filemtime(__DIR__.'/style.css') );
 wp_enqueue_style( 'boj-style' );
 
 ?>
