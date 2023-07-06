@@ -71,6 +71,9 @@
 .boj-l-time-acc {
 	background-color: #9c8061;
 }
+.boj-l-multilang, .boj-l-bookmark {
+	background-color: #777;
+}
 .boj-t-img {
 	display: inline !important;
 	line-height: inherit;
@@ -79,35 +82,27 @@
 	vertical-align: middle;
 }
 .boj-t-text-nr {
-	font-weight: bold;
 	color: #000;
 }
 .boj-t-text-bronze {
-	font-weight: bold;
 	color: #ad5600;
 }
 .boj-t-text-silver {
-	font-weight: bold;
 	color: #435f7a;
 }
 .boj-t-text-gold {
-	font-weight: bold;
 	color: #ec9a00;
 }
 .boj-t-text-platinum {
-	font-weight: bold;
 	color: #27e2a4;
 }
 .boj-t-text-diamond {
-	font-weight: bold;
 	color: #00b4fc;
 }
 .boj-t-text-ruby {
-	font-weight: bold;
 	color: #ff0062;
 }
 .boj-t-text-master {
-	font-weight: bold;
     background-color: rgb(180, 145, 255);
     background-image: linear-gradient(0deg, rgb(255, 124, 168), rgb(180, 145, 255), rgb(124, 249, 255));
     background-size: 80%;
@@ -117,10 +112,10 @@
     background-repeat: repeat;
 }
 .boj-t-text-admin {
-	font-weight: bold;
 	color: #17ce3a;
 }
 .boj-u {
+	font-weight: bold;
 	box-shadow: none !important;
 	white-space: nowrap;
 }

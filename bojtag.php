@@ -16,7 +16,7 @@
  * Plugin Name:       BOJ Tag
  * Plugin URI:        https://blog.sakede.su
  * Description:       백준 온라인 저지(BOJ)와 solved.ac의 태그를 표시합니다.
- * Version:           r230521b
+ * Version:           r230707a
  * Author:            Sake
  * Author URI:        https://blog.sakede.su
  * License:           MIT
@@ -37,6 +37,7 @@ function get_http_response_code($url) {
 // 솔브드 티어를 리턴합니다. 배열은 [0] = 티어를 0~31까지의 숫자로 나타낸 값, [1] = 티어 이름, [2] = 티어 색상(css용)입니다.
 // TODO 새싹티어 이쁘게 바꾸기
 function solved_tier( $arg ) {
+
 	if ( $arg == '-1' || $arg == 'nr' ) {
 		$tier = array('nr', 'Not Ratable', 'nr');
 	} elseif ( $arg == '0' || $arg == 'ur' ) {
@@ -106,13 +107,108 @@ function solved_tier( $arg ) {
 	} elseif ( $arg == '31' || $arg == 'm' ) {
 		$tier = array('31', 'Master', 'master');
 	}
+
 	return $tier;
+}
+
+// BOJ 문제 태그를 리턴합니다.
+function boj_label( $arg ) {
+
+	if ( $arg == 'spj' ) {
+		$result = array('spj', '스페셜 저지', 'Special Judge');
+	} elseif ( $arg == 'partial' ) {
+		$result = array('partial', '점수', 'Points');
+	} elseif ( $arg == 'full' ) {
+		$result = array('full', '전체 채점', 'Full');
+	} elseif ( $arg == 'random-killer' ) {
+		$result = array('random-killer', '랜덤 방지', 'Random');
+	} elseif ( $arg == 'unofficial' ) {
+		$result = array('unofficial', '번외', 'Extra');
+	} elseif ( $arg == 'preparing' ) {
+		$result = array('preparing', '채점 준비 중', 'Preparing');
+	} elseif ( $arg == 'deleted' ) {
+		$result = array('deleted', '삭제', 'Deleted');
+	} elseif ( $arg == 'subtask' ) {
+		$result = array('subtask', '서브태스크', 'Subtask');
+	} elseif ( $arg == 'ac' ) {
+		$result = array('ac', '성공', 'Success');
+	} elseif ( $arg == 'pac' ) {
+		$result = array('pac', '부분 성공', 'Partial Success');
+	} elseif ( $arg == 'wa' ) {
+		$result = array('wa', '실패', 'Failure');
+	} elseif ( $arg == 'language-restrict' ) {
+		$result = array('language-restrict', '언어 제한', 'Language');
+	} elseif ( $arg == 'submit-limit' ) {
+		$result = array('submit-limit', '제출 횟수 제한', 'Submit');
+	} elseif ( $arg == 'interactive' ) {
+		$result = array('interactive', '인터랙티브', 'Interactive');
+	} elseif ( $arg == 'func' ) {
+		$result = array('func', '함수 구현', 'Function');
+	} elseif ( $arg == 'two-steps' ) {
+		$result = array('two-steps', '투 스텝', 'Two Steps');
+	} elseif ( $arg == 'class' ) {
+		$result = array('class', '클래스 구현', 'Class');
+	} elseif ( $arg == 'feedback' ) {
+		$result = array('feedback', '피드백', 'Feedback');
+	} elseif ( $arg == 'time-acc' ) {
+		$result = array('time-acc', '시간 누적', 'Time Accumulation');
+	} elseif ( $arg == 'multilang' ) {
+		$result = array('multilang', '다국어', 'Multilingual');
+	} elseif ( $arg == 'bookmark' ) {
+		$result = array('bookmark', '북마크', 'Bookmark');
+	}
+
+    return $result;
+}
+
+// BOJ 채점 결과를 리턴합니다.
+function boj_result( $arg ) {
+
+	if ( $arg == '0' || $arg == 'wait' ) {
+		$result = array('wait', '기다리는 중', 'Pending');
+	} elseif ( $arg == '1' || $arg == 'rejudge-wait' ) {
+		$result = array('rejudge-wait', '재채점을 기다리는 중', 'Pending Rejudge');
+	} elseif ( $arg == '2' || $arg == 'compile' ) {
+		$result = array('compile', '채점 준비 중', 'Preparing for Judging');
+	} elseif ( $arg == '3' || $arg == 'judging' ) {
+		$result = array('judging', '채점 중', 'Judging');
+	} elseif ( $arg == '4' || $arg == 'ac' ) {
+		$result = array('ac', '맞았습니다!!', 'Accepted');
+	} elseif ( $arg == '5' || $arg == 'pe' ) {
+		$result = array('pe', '출력 형식이 잘못되었습니다', 'Presentation Error');
+	} elseif ( $arg == '6' || $arg == 'wa' ) {
+		$result = array('wa', '틀렸습니다', 'Wrong Answer');
+	} elseif ( $arg == '7' || $arg == 'tle' ) {
+		$result = array('tle', '시간 초과', 'Time Limit Exceeded');
+	} elseif ( $arg == '8' || $arg == 'mle' ) {
+		$result = array('mle', '메모리 초과', 'Memory Limit Exceeded');
+	} elseif ( $arg == '9' || $arg == 'ole' ) {
+		$result = array('ole', '출력 초과', 'Output Limit Exceeded');
+	} elseif ( $arg == '10' || $arg == 'rte' ) {
+		$result = array('rte', '런타임 에러', 'Runtime Error');
+	} elseif ( $arg == '11' || $arg == 'ce' ) {
+		$result = array('ce', '컴파일 에러', 'Compilation Error');
+	} elseif ( $arg == '12' || $arg == 'co' ) {
+		$result = array('co', '채점 불가', 'Unavailable');
+	} elseif ( $arg == '13' || $arg == 'del' ) {
+		$result = array('del', '삭제된 제출', 'Deleted');
+	} elseif ( $arg == '14' || $arg == 'remain' ) {
+		$result = array('del', '초 후 채점 시작', '');
+	} elseif ( $arg == '15' || $arg == 'pac' ) {
+		$result = array('pac', '맞았습니다!!', 'Partially Accepted');
+	} elseif ( $arg == '16' || $arg == 'rtereason' ) {
+		$result = array('judging', '런타임 에러 이유를 찾는 중', 'Finding RTE reason');
+	} elseif ( $arg == 'nojudge' ) {
+		$result = array('nojudge', '채점하지 않음', '');
+	}
+
+	return $result;
 }
 
 // 쇼트코드
 function bojtag( $atts ) {
 
-	// Attribute 값 가져오기, l, r, t, u 중 하나, s, re는 있어도 되고 없어도 됨
+	// Attribute 값 가져오기, l, r, t, u 중 하나, s, re, en은 있어도 되고 없어도 됨
 	$atts = shortcode_atts(
 		array(
 			'l' => '',
@@ -121,107 +217,52 @@ function bojtag( $atts ) {
 			'u' => '',
 			's' => '',
 			're' => '',
+			'en' => '',
 		),
 		$atts,
 		'boj'
 	);
 
 	if ( $atts['l'] !== '' ) {
-		if ( $atts['l'] == 'spj' ) {
-			return '<span class="boj-l boj-l-spj">스페셜 저지</span>';
-		} elseif ( $atts['l'] == 'partial' ) {
-			return '<span class="boj-l boj-l-partial">점수</span>';
-		} elseif ( $atts['l'] == 'full' ) {
-			return '<span class="boj-l boj-l-full">전체 채점</span>';
-		} elseif ( $atts['l'] == 'random-killer' ) {
-			return '<span class="boj-l boj-l-random-killer">랜덤 방지</span>';
-		} elseif ( $atts['l'] == 'unofficial' ) {
-			return '<span class="boj-l boj-l-unofficial">번외</span>';
-		} elseif ( $atts['l'] == 'preparing' ) {
-			return '<span class="boj-l boj-l-preparing">채점 준비 중</span>';
-		} elseif ( $atts['l'] == 'deleted' ) {
-			return '<span class="boj-l boj-l-deleted">삭제</span>';
-		} elseif ( $atts['l'] == 'subtask' ) {
-			return '<span class="boj-l boj-l-subtask">서브태스크</span>';
-		} elseif ( $atts['l'] == 'ac' ) {
-			return '<span class="boj-l boj-l-ac">성공</span>';
-		} elseif ( $atts['l'] == 'pac' ) {
-			return '<span class="boj-l boj-l-pac">부분 성공</span>';
-		} elseif ( $atts['l'] == 'wa' ) {
-			return '<span class="boj-l boj-l-wa">실패</span>';
-		} elseif ( $atts['l'] == 'language-restrict' ) {
-			return '<span class="boj-l boj-l-language-restrict">언어 제한</span>';
-		} elseif ( $atts['l'] == 'submit-limit' ) {
-			if ($atts['s'] == '' ) {
-				return '<span class="boj-l boj-l-submit-limit">제출 횟수 제한</span>';
+
+		$l = boj_label($atts['l']);
+
+		if ( $atts['s'] == '' ) {
+			if ( $atts['en'] == '' ) {
+				return '<span class="boj-l boj-l-'.$l[0].'">'.$l[1].'</span>';
 			} else {
-				return '<span class="boj-l boj-l-submit-limit">제출 횟수 제한 '.$atts['s'].'</span>';
+				return '<span class="boj-l boj-l-'.$l[0].'">'.$l[2].'</span>';
 			}
-		} elseif ( $atts['l'] == 'interactive' ) {
-			return '<span class="boj-l boj-l-interactive">인터랙티브</span>';
-		} elseif ( $atts['l'] == 'func' ) {
-			return '<span class="boj-l boj-l-func">함수 구현</span>';
-		} elseif ( $atts['l'] == 'two-steps' ) {
-			return '<span class="boj-l boj-l-two-steps">투 스텝</span>';
-		} elseif ( $atts['l'] == 'class' ) {
-			return '<span class="boj-l boj-l-class">클래스 구현</span>';
-		} elseif ( $atts['l'] == 'feedback' ) {
-			return '<span class="boj-l boj-l-feedback">피드백</span>';
-		} elseif ( $atts['l'] == 'time-acc' ) {
-			return '<span class="boj-l boj-l-time-acc">시간 누적</span>';
-		} 
+		} else {
+			return '<span class="boj-l boj-l-'.$l[0].'">'.$atts['s'].'</span>';
+		}
 
 	} elseif ( $atts['r'] !== '' ) {
+
+		$r = boj_result($atts['r']);
+
 		if ( $atts['re'] == '1' ) {
 			$re = 'boj-r-rejudge ';
 		} else {
 			$re = '';
 		}
 
-		if ( $atts['r'] == 'ac' ) {
-			if ( $atts['s'] == '' ) {
-				return '<span class="'.$re.'boj-r-ac">맞았습니다!!</span>';
+		if ( $atts['s'] == '' ) {
+			if ( $atts['en'] == '' ) {
+				return '<span class="'.$re.'boj-r-'.$r[0].'">'.$r[1].'</span>';
 			} else {
-				return '<span class="'.$re.'boj-r-ac">'.$atts['s'].'점</span>';
+				return '<span class="'.$re.'boj-r-'.$r[0].'">'.$r[2].'</span>';
 			}
-		} elseif ( $atts['r'] == 'pac' ) {
-			if ( $atts['s'] == '' ) {
-				return '<span class="'.$re.'boj-r-pac">맞았습니다!!</span>';
+		} else {
+			if ( $atts['r'] == '14' || $atts['r'] == 'remain' ) {
+				return '<span class="'.$re.'boj-r-'.$r[0].'">'.$atts['s'].$r['1'].'</span>';
 			} else {
-				return '<span class="'.$re.'boj-r-pac">'.$atts['s'].'점</span>';
+				return '<span class="'.$re.'boj-r-'.$r[0].'">'.$atts['s'].'</span>';
 			}
-		} elseif ( $atts['r'] == 'wa' ) {
-			return '<span class="'.$re.'boj-r-wa">틀렸습니다</span>';
-		} elseif ( $atts['r'] == 'pe' ) {
-			return '<span class="'.$re.'boj-r-pe">출력 형식이 잘못되었습니다</span>';
-		} elseif ( $atts['r'] == 'tle' ) {
-			return '<span class="'.$re.'boj-r-tle">시간 초과</span>';
-		} elseif ( $atts['r'] == 'mle' ) {
-			return '<span class="'.$re.'boj-r-mle">메모리 초과</span>';
-		} elseif ( $atts['r'] == 'ole' ) {
-			return '<span class="'.$re.'boj-r-ole">출력 초과</span>';
-		} elseif ( $atts['r'] == 'rte' ) {
-			return '<span class="'.$re.'boj-r-rte">런타임 에러</span>';
-		} elseif ( $atts['r'] == 'ce' ) {
-			return '<span class="'.$re.'boj-r-ce">컴파일 에러</span>';
-		} elseif ( $atts['r'] == 'wait' ) {
-			return '<span class="'.$re.'boj-r-wait">기다리는 중</span>';
-		} elseif ( $atts['r'] == 'rejudge-wait' ) {
-			return '<span class="'.$re.'boj-r-rejudge-wait">재채점을 기다리는 중</span>';
-		} elseif ( $atts['r'] == 'nojudge' ) {
-			return '<span class="'.$re.'boj-r-nojudge">채점하지 않음</span>';
-		} elseif ( $atts['r'] == 'compile' ) {
-			return '<span class="'.$re.'boj-r-compile">채점 준비 중</span>';
-		} elseif ( $atts['r'] == 'judging' ) {
-			return '<span class="'.$re.'boj-r-judging">채점 중</span>';
-		} elseif ( $atts['r'] == 'co' ) {
-			return '<span class="'.$re.'boj-r-co">채점 불가</span>';
-		} elseif ( $atts['r'] == 'del' ) {
-			return '<span class="'.$re.'boj-r-del">삭제된 제출</span>';
-		} 
+		}
 
 	} elseif ($atts['t'] !== '') {
-		
+
 		$t = solved_tier($atts['t']);
 
 		if ( $atts['s'] == '1' ) {
@@ -229,7 +270,7 @@ function bojtag( $atts ) {
 		} else {
 			return '<img src="https://static.solved.ac/tier_small/'.$t[0].'.svg" class="boj-t-img boj-t-'.$t[0].'" alt="'.$t[1].'">';
 		}
-		
+
 	} elseif ($atts['u'] !== '') {
 
 		$handle = $atts['u'];
@@ -273,12 +314,23 @@ function bojtag( $atts ) {
 		} else {
 			return '<a href="https://solved.ac/profile/'.$handle.'" target="_blank" class="boj-u"><img src="https://static.solved.ac/tier_small/'.$info['tier'].'.svg" class="boj-t-img"><span class="boj-t-text-'.$t[2].'">&nbsp;'.$handle.'</span></a>';
 		}
-		
+
 	}
 
 }
 
 add_shortcode( 'boj', 'bojtag' );
+
+function shortcode_test($atts) {
+
+    extract(shortcode_atts(array(
+            'blob' => isset($atts[0]) ? $atts[0] : '' ,
+            ), $atts));
+
+    return ':blob' . $blob . ':';
+}
+
+add_shortcode ('blob','shortcode_test');
 
 // CSS 적용하기
 wp_register_style( 'boj-style', plugins_url('style.css', __FILE__), array(), filemtime(__DIR__.'/style.css') );
