@@ -16,7 +16,7 @@
  * Plugin Name:       BOJ Tag
  * Plugin URI:        https://blog.sakede.su
  * Description:       백준 온라인 저지(BOJ)와 solved.ac의 태그를 표시합니다.
- * Version:           r230710a
+ * Version:           r230710b
  * Author:            Sake
  * Author URI:        https://blog.sakede.su
  * License:           MIT
@@ -417,7 +417,11 @@ function bojtag( $atts ) {
 		}
 	
 		$info = json_decode(file_get_contents($file), true);
-		$t = solved_tier($info['level']);
+		if ( $info['level'] == 0 && $info['isLevelLocked'] == true ) { // 난이도를 매길 수 없는 문제 (Not Ratable)
+			$t = solved_tier('nr');
+		} else {
+			$t = solved_tier($info['level']);
+		}
 	
 		return '<a href="'.$bojurl.'" target="_blank" class="boj-p"><img src="https://static.solved.ac/tier_small/'.$t[0].'.svg" class="boj-t-img"><span class="boj-p-text">&nbsp;'.$info['problemId'].'. '.$info['titleKo'].'</span></a>';
 
