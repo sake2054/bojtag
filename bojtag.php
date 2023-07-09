@@ -16,7 +16,7 @@
  * Plugin Name:       BOJ Tag
  * Plugin URI:        https://blog.sakede.su
  * Description:       백준 온라인 저지(BOJ)와 solved.ac의 태그를 표시합니다.
- * Version:           r230707a
+ * Version:           r230710a
  * Author:            Sake
  * Author URI:        https://blog.sakede.su
  * License:           MIT
@@ -29,13 +29,12 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 // HTTP 상태 코드를 받아옵니다. 
-function get_http_response_code($url) {
-	$headers = get_headers($url);
-	return substr($headers[0], 9, 3);
+function get_http_response_code( $url ) {
+	$headers = get_headers( $url );
+	return substr( $headers[0], 9, 3 );
 }
 
-// 솔브드 티어를 리턴합니다. 배열은 [0] = 티어를 0~31까지의 숫자로 나타낸 값, [1] = 티어 이름, [2] = 티어 색상(css용)입니다.
-// TODO 새싹티어 이쁘게 바꾸기
+// solved.ac 티어를 리턴합니다. 배열은 [0] = 티어를 0~31까지의 숫자로 나타낸 값, [1] = 티어 이름, [2] = 티어 색상(css용)입니다.
 function solved_tier( $arg ) {
 
 	if ( $arg == '-1' || $arg == 'nr' ) {
@@ -111,7 +110,7 @@ function solved_tier( $arg ) {
 	return $tier;
 }
 
-// BOJ 문제 태그를 리턴합니다.
+// BOJ 문제 태그
 function boj_label( $arg ) {
 
 	if ( $arg == 'spj' ) {
@@ -161,7 +160,7 @@ function boj_label( $arg ) {
     return $result;
 }
 
-// BOJ 채점 결과를 리턴합니다.
+// BOJ 채점 결과
 function boj_result( $arg ) {
 
 	if ( $arg == '0' || $arg == 'wait' ) {
@@ -205,19 +204,98 @@ function boj_result( $arg ) {
 	return $result;
 }
 
+// solved.ac 아레나 티어
+function arena_tier( $arg ) {
+
+	$arg = strtolower($arg);
+
+    if ( $arg == '0' || $arg == 'ur' ) {
+        $tier = array('0', 'Unrated', 'ur');
+    } elseif ( $arg == '1' || $arg == 'c' ) {
+        $tier = array('1', 'C', 'c');
+    } elseif ( $arg == '2' || $arg == 'c+' ) {
+        $tier = array('2', 'C+', 'c');
+    } elseif ( $arg == '3' || $arg == 'b' ) {
+        $tier = array('3', 'B', 'b');
+    } elseif ( $arg == '4' || $arg == 'b+' ) {
+        $tier = array('4', 'B+', 'b');
+    } elseif ( $arg == '5' || $arg == 'a' ) {
+        $tier = array('5', 'A', 'a');
+    } elseif ( $arg == '6' || $arg == 'a+' ) {
+        $tier = array('6', 'A+', 'a');
+    } elseif ( $arg == '7' || $arg == 's' ) {
+        $tier = array('7', 'S', 's');
+    } elseif ( $arg == '8' || $arg == 's+' ) {
+        $tier = array('8', 'S+', 's');
+    } elseif ( $arg == '9' || $arg == 'ss' ) {
+        $tier = array('9', 'SS', 'ss');
+    } elseif ( $arg == '10' || $arg == 'ss+' ) {
+        $tier = array('10', 'SS+', 'ss');
+    } elseif ( $arg == '11' || $arg == 'sss' ) {
+        $tier = array('11', 'SSS', 'sss');
+    } elseif ( $arg == '12' || $arg == 'sss+' ) {
+        $tier = array('12', 'SSS+', 'sss');
+    } elseif ( $arg == '13' || $arg == 'x' ) {
+        $tier = array('13', 'X', 'x');
+    }
+
+    return $tier;
+}
+
+// solved.ac 아레나 레이팅 기반 티어 계산
+function arena_rating( $arg ) {
+
+    $rating = intval( $arg );
+    if ( $rating == 0 ) {
+        $tier = '0';
+    } elseif ( $rating >= 1 && $rating <= 399 ) {
+        $tier = '1';
+    } elseif ( $rating >= 400 && $rating <= 799 ) {
+        $tier = '2';
+    } elseif ( $rating >= 800 && $rating <= 999 ) {
+        $tier = '3';
+    } elseif ( $rating >= 1000 && $rating <= 1199 ) {
+        $tier = '4';
+    } elseif ( $rating >= 1200 && $rating <= 1399 ) {
+        $tier = '5';
+    } elseif ( $rating >= 1400 && $rating <= 1599 ) {
+        $tier = '6';
+    } elseif ( $rating >= 1600 && $rating <= 1799 ) {
+        $tier = '7';
+    } elseif ( $rating >= 1800 && $rating <= 1999 ) {
+        $tier = '8';
+    } elseif ( $rating >= 2000 && $rating <= 2199 ) {
+        $tier = '9';
+    } elseif ( $rating >= 2200 && $rating <= 2399 ) {
+        $tier = '10';
+    } elseif ( $rating >= 2400 && $rating <= 2599 ) {
+        $tier = '11';
+    } elseif ( $rating >= 2600 && $rating <= 2999 ) {
+        $tier = '12';
+    } elseif ( $rating >= 3000 ) {
+        $tier = '13';
+    }
+
+    return arena_tier( $tier );
+
+}
+
 // 쇼트코드
 function bojtag( $atts ) {
 
-	// Attribute 값 가져오기, l, r, t, u 중 하나, s, re, en은 있어도 되고 없어도 됨
+	// Attribute 값 가져오기, l, r, t, u, p, at, ar 중 하나, s, re, en은 있어도 되고 없어도 됨
 	$atts = shortcode_atts(
 		array(
-			'l' => '',
-			'r' => '',
-			't' => '',
-			'u' => '',
-			's' => '',
-			're' => '',
-			'en' => '',
+			'l' => '',  // BOJ Label
+			'r' => '',  // BOJ Result
+			't' => '',  // solved.ac Tier
+			'u' => '',  // solved.ac User Information
+			'p' => '',  // BOJ Problem Information
+			'at' => '', // solved.ac Arena Tier
+			'ar' => '', // solved.ac Arena Rating
+			's' => '',  // Custom String
+			're' => '', // Rejudge
+			'en' => '', // English
 		),
 		$atts,
 		'boj'
@@ -225,7 +303,7 @@ function bojtag( $atts ) {
 
 	if ( $atts['l'] !== '' ) {
 
-		$l = boj_label($atts['l']);
+		$l = boj_label( strtolower($atts['l']) );
 
 		if ( $atts['s'] == '' ) {
 			if ( $atts['en'] == '' ) {
@@ -239,7 +317,7 @@ function bojtag( $atts ) {
 
 	} elseif ( $atts['r'] !== '' ) {
 
-		$r = boj_result($atts['r']);
+		$r = boj_result( strtolower($atts['r']) );
 
 		if ( $atts['re'] == '1' ) {
 			$re = 'boj-r-rejudge ';
@@ -261,9 +339,9 @@ function bojtag( $atts ) {
 			}
 		}
 
-	} elseif ($atts['t'] !== '') {
+	} elseif ( $atts['t'] !== '' ) {
 
-		$t = solved_tier($atts['t']);
+		$t = solved_tier( strtolower($atts['t']) );
 
 		if ( $atts['s'] == '1' ) {
 			return '<img src="https://static.solved.ac/tier_small/'.$t[0].'.svg" class="boj-t-img boj-t-'.$t[0].'" alt="'.$t[1].'"><span class="boj-t-text-'.$t[2].'"> '.$t[1].'</span>';
@@ -271,27 +349,27 @@ function bojtag( $atts ) {
 			return '<img src="https://static.solved.ac/tier_small/'.$t[0].'.svg" class="boj-t-img boj-t-'.$t[0].'" alt="'.$t[1].'">';
 		}
 
-	} elseif ($atts['u'] !== '') {
+	} elseif ( $atts['u'] !== '' ) {
 
-		$handle = $atts['u'];
+		$handle = strtolower($atts['u']);
 		$file = __DIR__.'/users/'.$handle.'.json';
 		$solvedurl = 'https://solved.ac/api/v3/user/show?handle='.$handle;
 		
-		if ($handle == 'solvedac') { // solvedac 계정
+		if ( $handle == 'solvedac' ) { // solvedac 계정
 			if ($atts['s'] == 1) {
 				return '<a href="https://solved.ac/profile/solvedac" target="_blank" class="boj-u"><img src="https://static.solved.ac/tier_small/admin.svg" class="boj-t-img"><span>&nbsp;</span><img src="https://static.solved.ac/uploads/profile/64x64/c6ee5f2d3a85d783ca494e77423bb5d295bbc534.png" class="boj-u-profile"><span class="boj-t-text-admin">&nbsp;solvedac</span></a>';
 			} else {
 				return '<a href="https://solved.ac/profile/solvedac" target="_blank" class="boj-u"><img src="https://static.solved.ac/tier_small/admin.svg" class="boj-t-img"><span class="boj-t-text-admin">&nbsp;solvedac</span></a>';
 			}
-		} else if (file_exists($file)) {
+		} else if ( file_exists($file) ) {
 			$filetime = filemtime($file);
 			$now = time();
-			if ( ($now - $filetime) >= 86400 ) {
+			if (($now - $filetime) >= 86400) {
 				$userinfo = file_get_contents($solvedurl);
 				file_put_contents($file, $userinfo);
 			}
 		} else {
-			if (get_http_response_code($solvedurl) != '200') {
+			if ( get_http_response_code($solvedurl) != '200' ) {
 				return 'ERROR :(';
 			} else {
 				$userinfo = file_get_contents($solvedurl);
@@ -302,7 +380,7 @@ function bojtag( $atts ) {
 		$info = json_decode(file_get_contents($file), true);
 		$t = solved_tier($info['tier']);
 
-		if ($atts['s'] == '1') {
+		if ( $atts['s'] == '1' ) {
 			$profileImage = $info['profileImageUrl'];
 			if ($profileImage == null) {
 				$profileImage = 'https://static.solved.ac/misc/64x64/default_profile.png';
@@ -310,11 +388,51 @@ function bojtag( $atts ) {
 				$profileImage = 'https://static.solved.ac/uploads/profile/64x64/'.substr($profileImage, 41);
 			}
 
-			return '<a href="https://solved.ac/profile/'.$handle.'" target="_blank" class="boj-u"><img src="https://static.solved.ac/tier_small/'.$info['tier'].'.svg" class="boj-t-img"><span>&nbsp;</span><img src="'.$profileImage.'" class="boj-u-profile"><span class="boj-t-text-'.$t[2].'">&nbsp;'.$handle.'</span></a>';
+			return '<a href="https://solved.ac/profile/'.$handle.'" target="_blank" class="boj-u"><img src="https://static.solved.ac/tier_small/'.$t[0].'.svg" class="boj-t-img"><span>&nbsp;</span><img src="'.$profileImage.'" class="boj-u-profile"><span class="boj-t-text-'.$t[2].'">&nbsp;'.$handle.'</span></a>';
 		} else {
-			return '<a href="https://solved.ac/profile/'.$handle.'" target="_blank" class="boj-u"><img src="https://static.solved.ac/tier_small/'.$info['tier'].'.svg" class="boj-t-img"><span class="boj-t-text-'.$t[2].'">&nbsp;'.$handle.'</span></a>';
+			return '<a href="https://solved.ac/profile/'.$handle.'" target="_blank" class="boj-u"><img src="https://static.solved.ac/tier_small/'.$t[0].'.svg" class="boj-t-img"><span class="boj-t-text-'.$t[2].'">&nbsp;'.$handle.'</span></a>';
 		}
 
+	} elseif ( $atts['p'] !== '' ) {
+
+		$problemId = $atts['p'];
+		$file = __DIR__.'/problems/'.$problemId.'.json';
+		$solvedurl = 'https://solved.ac/api/v3/problem/show?problemId='.$problemId;
+		$bojurl = 'https://www.acmicpc.net/problem/'.$problemId;
+	
+		if (file_exists($file)) {
+			$filetime = filemtime($file);
+			$now = time();
+			if (($now - $filetime) >= 259200) {
+				$problemInfo = file_get_contents($solvedurl);
+				file_put_contents($file, $problemInfo);
+			}
+		} else {
+			if (get_http_response_code($solvedurl) != '200') {
+				return 'ERROR :(';
+			} else {
+				$problemInfo = file_get_contents($solvedurl);
+				file_put_contents($file, $problemInfo);
+			}
+		}
+	
+		$info = json_decode(file_get_contents($file), true);
+		$t = solved_tier($info['level']);
+	
+		return '<a href="'.$bojurl.'" target="_blank" class="boj-p"><img src="https://static.solved.ac/tier_small/'.$t[0].'.svg" class="boj-t-img"><span class="boj-p-text">&nbsp;'.$info['problemId'].'. '.$info['titleKo'].'</span></a>';
+
+	} elseif ( $atts['at'] !== '' ) {
+
+		$t = arena_tier( strtolower($atts['at']) );
+	
+		return '<img src="https://static.solved.ac/tier_arena/'.$t[0].'.svg" class="boj-a-img boj-a-'.$t[0].'" alt="'.$t[1].'">';
+	
+	} elseif ( $atts['ar'] !== '' ) {
+	
+		$t = arena_rating( $atts['ar'] );
+	
+		return '<img src="https://static.solved.ac/tier_arena/'.$t[0].'.svg" class="boj-a-img boj-a-'.$t[0].'" alt="'.$t[1].'"><span class="boj-a-text boj-a-text-'.$t[2].'"> '.$atts['ar'].'</span>';
+	
 	}
 
 }
