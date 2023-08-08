@@ -16,7 +16,7 @@
  * Plugin Name:       BOJ Tag
  * Plugin URI:        https://blog.sakede.su
  * Description:       백준 온라인 저지(BOJ)와 solved.ac의 태그를 표시합니다.
- * Version:           r230808a
+ * Version:           r230808b
  * Author:            Sake
  * Author URI:        https://blog.sakede.su
  * License:           MIT
@@ -24,15 +24,15 @@
  */
 
 // If this file is called directly, abort.
-if ( !defined( 'WPINC' ) ) {
+if ( !defined('WPINC')) {
 	die;
 }
 
-if ( !defined( 'BOJTAG_FILE') ) {
+if (!defined( 'BOJTAG_FILE')) {
     define( 'BOJTAG_FILE' , __FILE__ );
 }
 
-if ( !defined( 'BOJTAG_PATH') ) {
+if (!defined( 'BOJTAG_PATH')) {
     define( 'BOJTAG_PATH' , plugin_dir_path( __FILE__ ) );
 }
 
@@ -288,10 +288,14 @@ function arena_rating( $arg ) {
 
 }
 
+function in_array_any($a, $b) {
+	return !empty(array_intersect($a, $b));
+}
+
 // 쇼트코드
 function bojtag( $atts ) {
 
-	// Attribute 값 가져오기, l, r, t, u, p, at, ar 중 하나, s, re, en은 있어도 되고 없어도 됨
+	// Attribute 값 가져오기, l, r, t, u, p, at, ar 중 하나, s, o는 있어도 되고 없어도 됨
 	$atts = shortcode_atts(
 		array(
 			'l' => '',  // BOJ Label
@@ -302,22 +306,23 @@ function bojtag( $atts ) {
 			'at' => '', // solved.ac Arena Tier
 			'ar' => '', // solved.ac Arena Rating
 			's' => '',  // Custom String
-			're' => '', // Rejudge
-			'en' => '', // English
+			'o' => '',  // Option
 		),
 		$atts,
 		'boj'
 	);
 
-	if ( $atts['l'] !== '' ) {
+	$o = explode(' ', strtolower($atts['o']));
 
-		$l = boj_label( strtolower($atts['l']) );
+	if ($atts['l'] !== '') {
+
+		$l = boj_label(strtolower($atts['l']));
 
 		if ( $atts['s'] == '' ) {
-			if ( $atts['en'] == '' ) {
-				return '<span class="boj-l boj-l-'.$l[0].'">'.$l[1].'</span>';
-			} else {
+			if (in_array_any(['en', 'english'], $o)) {
 				return '<span class="boj-l boj-l-'.$l[0].'">'.$l[2].'</span>';
+			} else {
+				return '<span class="boj-l boj-l-'.$l[0].'">'.$l[1].'</span>';
 			}
 		} else {
 			return '<span class="boj-l boj-l-'.$l[0].'">'.$atts['s'].'</span>';
@@ -327,21 +332,21 @@ function bojtag( $atts ) {
 
 		$r = boj_result( strtolower($atts['r']) );
 
-		if ( $atts['re'] == '1' ) {
+		if (in_array_any(['re', 'rejudge'], $o)) {
 			$re = 'boj-r-rejudge ';
 		} else {
 			$re = '';
 		}
 
 		if ( $atts['s'] == '' ) {
-			if ( $atts['en'] == '' ) {
-				return '<span class="'.$re.'boj-r-'.$r[0].'">'.$r[1].'</span>';
-			} else {
+			if (in_array_any(['en', 'english'], $o)) {
 				return '<span class="'.$re.'boj-r-'.$r[0].'">'.$r[2].'</span>';
+			} else {
+				return '<span class="'.$re.'boj-r-'.$r[0].'">'.$r[1].'</span>';
 			}
 		} else {
 			if ( $atts['r'] == '14' || $atts['r'] == 'remain' ) {
-				return '<span class="'.$re.'boj-r-'.$r[0].'">'.$atts['s'].$r['1'].'</span>';
+				return '<span class="'.$re.'boj-r-'.$r[0].'">'.$atts['s'].$r[1].'</span>';
 			} else {
 				return '<span class="'.$re.'boj-r-'.$r[0].'">'.$atts['s'].'</span>';
 			}
@@ -351,7 +356,7 @@ function bojtag( $atts ) {
 
 		$t = solved_tier( strtolower($atts['t']) );
 
-		if ( $atts['s'] == '1' ) {
+		if (in_array_any(['name', 'tiername'], $o)) {
 			return '<img src="https://static.solved.ac/tier_small/'.$t[0].'.svg" class="boj-t-img boj-t-'.$t[0].'" alt="'.$t[1].'"><span class="boj-t-text-'.$t[2].'"> '.$t[1].'</span>';
 		} else {
 			return '<img src="https://static.solved.ac/tier_small/'.$t[0].'.svg" class="boj-t-img boj-t-'.$t[0].'" alt="'.$t[1].'">';
@@ -364,7 +369,7 @@ function bojtag( $atts ) {
 		$solvedurl = 'https://solved.ac/api/v3/user/show?handle='.$handle;
 		
 		if ( $handle == 'solvedac' ) { // solvedac 계정
-			if ($atts['s'] == 1) {
+			if (in_array_any(['pic', 'picture'], $o)) {
 				return '<a href="https://solved.ac/profile/solvedac" target="_blank" class="boj-u"><img src="https://static.solved.ac/tier_small/admin.svg" class="boj-t-img"><span>&nbsp;</span><img src="https://static.solved.ac/uploads/profile/64x64/c6ee5f2d3a85d783ca494e77423bb5d295bbc534.png" class="boj-u-profile"><span class="boj-t-text-admin">&nbsp;solvedac</span></a>';
 			} else {
 				return '<a href="https://solved.ac/profile/solvedac" target="_blank" class="boj-u"><img src="https://static.solved.ac/tier_small/admin.svg" class="boj-t-img"><span class="boj-t-text-admin">&nbsp;solvedac</span></a>';
@@ -388,7 +393,7 @@ function bojtag( $atts ) {
 		$info = json_decode(file_get_contents($file), true);
 		$t = solved_tier($info['tier']);
 
-		if ( $atts['s'] == '1' ) {
+		if (in_array_any(['pic', 'picture'], $o)) {
 			$profileImage = $info['profileImageUrl'];
 			if ($profileImage == null) {
 				$profileImage = 'https://static.solved.ac/misc/64x64/default_profile.png';
@@ -437,15 +442,19 @@ function bojtag( $atts ) {
 
 		$t = arena_tier( strtolower($atts['at']) );
 	
-		return '<img src="https://static.solved.ac/tier_arena/'.$t[0].'.svg" class="boj-a-img boj-a-'.$t[0].'" alt="'.$t[1].'">';
+		if (in_array_any(['old', 'old_rating'], $o)) {
+			return '<img src="https://static.solved.ac/tier_arena/'.$t[0].'.svg" class="boj-a-img boj-a-img-old boj-a-'.$t[0].'" alt="'.$t[1].'">';
+		} else {
+			return '<img src="https://static.solved.ac/tier_arena/'.$t[0].'.svg" class="boj-a-img boj-a-'.$t[0].'" alt="'.$t[1].'">';
+		}
 	
 	} elseif ( $atts['ar'] !== '' ) {
 	
 		$t = arena_rating( $atts['ar'] );
 
-		if ( $atts['s'] == '1' ) {
+		if (in_array_any(['old', 'old_rating'], $o)) {
 			return '<img src="https://static.solved.ac/tier_arena/'.$t[0].'.svg" class="boj-a-img boj-a-img-old boj-a-'.$t[0].'" alt="'.$t[1].'"><span class="boj-a-text boj-a-text-old boj-a-text-'.$t[2].'"> '.$atts['ar'].'</span>';
-		} elseif ( $atts['s'] == '2' ) {
+		} elseif (in_array_any(['num', 'rating'], $o)) {
 			return '<span class="boj-a-text boj-a-text-'.$t[2].'"> '.$atts['ar'].'</span>';
 		} else {
 			return '<img src="https://static.solved.ac/tier_arena/'.$t[0].'.svg" class="boj-a-img boj-a-'.$t[0].'" alt="'.$t[1].'"><span class="boj-a-text boj-a-text-'.$t[2].'"> '.$atts['ar'].'</span>';
