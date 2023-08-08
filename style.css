@@ -135,7 +135,7 @@ h2 .boj-t-img, h3 .boj-t-img, h4 .boj-t-img, h5 .boj-t-img, h6 .boj-t-img {
 .boj-p {
 	font-weight: bold;
 	box-shadow: none !important;
-	white-space: nowrap;
+	white-space: break-spaces;
 }
 .boj-a-img {
 	display: inline !important;
@@ -146,7 +146,7 @@ h2 .boj-t-img, h3 .boj-t-img, h4 .boj-t-img, h5 .boj-t-img, h6 .boj-t-img {
 }
 .boj-a-text {
 	font-family: 'Oxanium', sans-serif;
-	font-weight: 700;
+	font-weight: bold;
 }
 .boj-a-text-ur {
 	color: #000;
@@ -170,5 +170,15 @@ h2 .boj-t-img, h3 .boj-t-img, h4 .boj-t-img, h5 .boj-t-img, h6 .boj-t-img {
 	color: #ff0062;
 }
 .boj-a-text-x {
-	color: #ff0062;
+	display: inline-block;
+}
+.boj-a-text-x:first-letter {
+	color: #ff143b;
+}
+.boj-a-img-old {
+	filter: grayscale(100%) !important;
+}
+.boj-a-text-old {
+	color: #818996 !important;
+	font-weight: normal !important;
 }

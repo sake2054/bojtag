@@ -16,7 +16,7 @@
  * Plugin Name:       BOJ Tag
  * Plugin URI:        https://blog.sakede.su
  * Description:       백준 온라인 저지(BOJ)와 solved.ac의 태그를 표시합니다.
- * Version:           r230710c
+ * Version:           r230808a
  * Author:            Sake
  * Author URI:        https://blog.sakede.su
  * License:           MIT
@@ -24,11 +24,19 @@
  */
 
 // If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die;
 }
 
-// HTTP 상태 코드를 받아옵니다. 
+if ( !defined( 'BOJTAG_FILE') ) {
+    define( 'BOJTAG_FILE' , __FILE__ );
+}
+
+if ( !defined( 'BOJTAG_PATH') ) {
+    define( 'BOJTAG_PATH' , plugin_dir_path( __FILE__ ) );
+}
+
+// HTTP 상태 코드
 function get_http_response_code( $url ) {
 	$headers = get_headers( $url );
 	return substr( $headers[0], 9, 3 );
@@ -352,7 +360,7 @@ function bojtag( $atts ) {
 	} elseif ( $atts['u'] !== '' ) {
 
 		$handle = strtolower($atts['u']);
-		$file = __DIR__.'/users/'.$handle.'.json';
+		$file = BOJTAG_PATH.'users/'.$handle.'.json';
 		$solvedurl = 'https://solved.ac/api/v3/user/show?handle='.$handle;
 		
 		if ( $handle == 'solvedac' ) { // solvedac 계정
@@ -396,7 +404,7 @@ function bojtag( $atts ) {
 	} elseif ( $atts['p'] !== '' ) {
 
 		$problemId = $atts['p'];
-		$file = __DIR__.'/problems/'.$problemId.'.json';
+		$file = BOJTAG_PATH.'problems/'.$problemId.'.json';
 		$solvedurl = 'https://solved.ac/api/v3/problem/show?problemId='.$problemId;
 		$bojurl = 'https://www.acmicpc.net/problem/'.$problemId;
 	
@@ -434,8 +442,14 @@ function bojtag( $atts ) {
 	} elseif ( $atts['ar'] !== '' ) {
 	
 		$t = arena_rating( $atts['ar'] );
-	
-		return '<img src="https://static.solved.ac/tier_arena/'.$t[0].'.svg" class="boj-a-img boj-a-'.$t[0].'" alt="'.$t[1].'"><span class="boj-a-text boj-a-text-'.$t[2].'"> '.$atts['ar'].'</span>';
+
+		if ( $atts['s'] == '1' ) {
+			return '<img src="https://static.solved.ac/tier_arena/'.$t[0].'.svg" class="boj-a-img boj-a-img-old boj-a-'.$t[0].'" alt="'.$t[1].'"><span class="boj-a-text boj-a-text-old boj-a-text-'.$t[2].'"> '.$atts['ar'].'</span>';
+		} elseif ( $atts['s'] == '2' ) {
+			return '<span class="boj-a-text boj-a-text-'.$t[2].'"> '.$atts['ar'].'</span>';
+		} else {
+			return '<img src="https://static.solved.ac/tier_arena/'.$t[0].'.svg" class="boj-a-img boj-a-'.$t[0].'" alt="'.$t[1].'"><span class="boj-a-text boj-a-text-'.$t[2].'"> '.$atts['ar'].'</span>';
+		}
 	
 	}
 
