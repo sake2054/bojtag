@@ -16,7 +16,7 @@
  * Plugin Name:       BOJ Tag
  * Plugin URI:        https://blog.sakede.su
  * Description:       백준 온라인 저지(BOJ)와 solved.ac의 태그를 표시합니다.
- * Version:           r230808b
+ * Version:           r230808c
  * Author:            Sake
  * Author URI:        https://blog.sakede.su
  * License:           MIT
@@ -28,12 +28,12 @@ if ( !defined('WPINC')) {
 	die;
 }
 
-if (!defined( 'BOJTAG_FILE')) {
+if (!defined('BOJTAG_VER')) {
+	define( 'BOJTAG_VER'  , 'r230808c');
     define( 'BOJTAG_FILE' , __FILE__ );
-}
-
-if (!defined( 'BOJTAG_PATH')) {
-    define( 'BOJTAG_PATH' , plugin_dir_path( __FILE__ ) );
+	define( 'BOJTAG_PATH' , plugin_dir_path( __FILE__ ) );
+	define( 'BOJTAG_URL'  , plugin_dir_URL( BOJTAG_FILE ) );
+	define( 'BOJTAG_IMG'  , BOJTAG_URL.'img/');
 }
 
 // HTTP 상태 코드
@@ -441,11 +441,17 @@ function bojtag( $atts ) {
 	} elseif ( $atts['at'] !== '' ) {
 
 		$t = arena_tier( strtolower($atts['at']) );
-	
+
 		if (in_array_any(['old', 'old_rating'], $o)) {
-			return '<img src="https://static.solved.ac/tier_arena/'.$t[0].'.svg" class="boj-a-img boj-a-img-old boj-a-'.$t[0].'" alt="'.$t[1].'">';
+			$old = 'boj-a-img-old ';
 		} else {
-			return '<img src="https://static.solved.ac/tier_arena/'.$t[0].'.svg" class="boj-a-img boj-a-'.$t[0].'" alt="'.$t[1].'">';
+			$old = '';
+		}
+	
+		if (in_array_any(['alt'], $o)) {
+			return '<img src="'.BOJTAG_IMG.'arena_'.$t[0].'.png" class="boj-a-img-alt '.$old.'boj-a-'.$t[0].'" alt="'.$t[1].'">';
+		} else {
+			return '<img src="https://static.solved.ac/tier_arena/'.$t[0].'.svg" class="boj-a-img '.$old.'boj-a-'.$t[0].'" alt="'.$t[1].'">';
 		}
 	
 	} elseif ( $atts['ar'] !== '' ) {
@@ -453,11 +459,17 @@ function bojtag( $atts ) {
 		$t = arena_rating( $atts['ar'] );
 
 		if (in_array_any(['old', 'old_rating'], $o)) {
-			return '<img src="https://static.solved.ac/tier_arena/'.$t[0].'.svg" class="boj-a-img boj-a-img-old boj-a-'.$t[0].'" alt="'.$t[1].'"><span class="boj-a-text boj-a-text-old boj-a-text-'.$t[2].'"> '.$atts['ar'].'</span>';
+			$old = 'boj-a-img-old ';
+		} else {
+			$old = '';
+		}
+
+		if (in_array_any(['alt'], $o)) {
+			return '<img src="'.BOJTAG_IMG.'arena_'.$t[0].'.png" class="boj-a-img-alt '.$old.'boj-a-'.$t[0].'" alt="'.$t[1].'"><span class="boj-a-text boj-a-text-old boj-a-text-'.$t[2].'"> '.$atts['ar'].'</span>';
 		} elseif (in_array_any(['num', 'rating'], $o)) {
 			return '<span class="boj-a-text boj-a-text-'.$t[2].'"> '.$atts['ar'].'</span>';
 		} else {
-			return '<img src="https://static.solved.ac/tier_arena/'.$t[0].'.svg" class="boj-a-img boj-a-'.$t[0].'" alt="'.$t[1].'"><span class="boj-a-text boj-a-text-'.$t[2].'"> '.$atts['ar'].'</span>';
+			return '<img src="https://static.solved.ac/tier_arena/'.$t[0].'.svg" class="boj-a-img '.$old.'boj-a-'.$t[0].'" alt="'.$t[1].'"><span class="boj-a-text boj-a-text-'.$t[2].'"> '.$atts['ar'].'</span>';
 		}
 	
 	}

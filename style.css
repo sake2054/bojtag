@@ -144,6 +144,13 @@ h2 .boj-t-img, h3 .boj-t-img, h4 .boj-t-img, h5 .boj-t-img, h6 .boj-t-img {
 	height: 1rem;
 	vertical-align: middle;
 }
+.boj-a-img-alt {
+	display: inline !important;
+	line-height: inherit;
+	width: 2rem;
+	height: 2rem;
+	vertical-align: middle;
+}
 .boj-a-text {
 	font-family: 'Oxanium', sans-serif;
 	font-weight: bold;
