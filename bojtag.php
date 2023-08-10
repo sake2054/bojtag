@@ -16,7 +16,7 @@
  * Plugin Name:       BOJ Tag
  * Plugin URI:        https://blog.sakede.su
  * Description:       백준 온라인 저지(BOJ)와 solved.ac의 태그를 표시합니다.
- * Version:           r230808c
+ * Version:           r230810a
  * Author:            Sake
  * Author URI:        https://blog.sakede.su
  * License:           MIT
@@ -24,12 +24,10 @@
  */
 
 // If this file is called directly, abort.
-if ( !defined('WPINC')) {
-	die;
-}
+if (!defined('WPINC')) {die;}
 
 if (!defined('BOJTAG_VER')) {
-	define( 'BOJTAG_VER'  , 'r230808c');
+	define( 'BOJTAG_VER'  , 'r230810a');
     define( 'BOJTAG_FILE' , __FILE__ );
 	define( 'BOJTAG_PATH' , plugin_dir_path( __FILE__ ) );
 	define( 'BOJTAG_URL'  , plugin_dir_URL( BOJTAG_FILE ) );
@@ -459,17 +457,19 @@ function bojtag( $atts ) {
 		$t = arena_rating( $atts['ar'] );
 
 		if (in_array_any(['old', 'old_rating'], $o)) {
-			$old = 'boj-a-img-old ';
+			$imgold = 'boj-a-img-old ';
+			$txtold = 'boj-a-text-old ';
 		} else {
-			$old = '';
+			$imgold = '';
+			$txtold = '';
 		}
 
 		if (in_array_any(['alt'], $o)) {
-			return '<img src="'.BOJTAG_IMG.'arena_'.$t[0].'.png" class="boj-a-img-alt '.$old.'boj-a-'.$t[0].'" alt="'.$t[1].'"><span class="boj-a-text boj-a-text-old boj-a-text-'.$t[2].'"> '.$atts['ar'].'</span>';
+			return '<img src="'.BOJTAG_IMG.'arena_'.$t[0].'.png" class="boj-a-img-alt '.$imgold.'boj-a-'.$t[0].'" alt="'.$t[1].'"><span class="boj-a-text '.$txtold.'boj-a-text-'.$t[2].'"> '.$atts['ar'].'</span>';
 		} elseif (in_array_any(['num', 'rating'], $o)) {
-			return '<span class="boj-a-text boj-a-text-'.$t[2].'"> '.$atts['ar'].'</span>';
+			return '<span class="boj-a-text '.$txtold.'boj-a-text-'.$t[2].'"> '.$atts['ar'].'</span>';
 		} else {
-			return '<img src="https://static.solved.ac/tier_arena/'.$t[0].'.svg" class="boj-a-img '.$old.'boj-a-'.$t[0].'" alt="'.$t[1].'"><span class="boj-a-text boj-a-text-'.$t[2].'"> '.$atts['ar'].'</span>';
+			return '<img src="https://static.solved.ac/tier_arena/'.$t[0].'.svg" class="boj-a-img '.$imgold.'boj-a-'.$t[0].'" alt="'.$t[1].'"><span class="boj-a-text '.$txtold.'boj-a-text-'.$t[2].'"> '.$atts['ar'].'</span>';
 		}
 	
 	}
