@@ -16,7 +16,7 @@
  * Plugin Name:       BOJ Tag
  * Plugin URI:        https://blog.sakede.su
  * Description:       백준 온라인 저지(BOJ)와 solved.ac의 태그를 표시합니다.
- * Version:           r230810a
+ * Version:           r231231a
  * Author:            Sake
  * Author URI:        https://blog.sakede.su
  * License:           MIT
@@ -27,7 +27,7 @@
 if (!defined('WPINC')) {die;}
 
 if (!defined('BOJTAG_VER')) {
-	define( 'BOJTAG_VER'  , 'r230810a');
+	define( 'BOJTAG_VER'  , 'r231231a');
     define( 'BOJTAG_FILE' , __FILE__ );
 	define( 'BOJTAG_PATH' , plugin_dir_path( __FILE__ ) );
 	define( 'BOJTAG_URL'  , plugin_dir_URL( BOJTAG_FILE ) );
@@ -389,7 +389,11 @@ function bojtag( $atts ) {
 		}
 		
 		$info = json_decode(file_get_contents($file), true);
-		$t = solved_tier($info['tier']);
+		if (in_array_any(['arena'], $o)) {
+			$t = arena_tier( $info['arenaTier'] );
+		} else {
+			$t = solved_tier($info['tier']);
+		}
 
 		if (in_array_any(['pic', 'picture'], $o)) {
 			$profileImage = $info['profileImageUrl'];
@@ -399,9 +403,17 @@ function bojtag( $atts ) {
 				$profileImage = 'https://static.solved.ac/uploads/profile/64x64/'.substr($profileImage, 41);
 			}
 
-			return '<a href="https://solved.ac/profile/'.$handle.'" target="_blank" class="boj-u"><img src="https://static.solved.ac/tier_small/'.$t[0].'.svg" class="boj-t-img"><span>&nbsp;</span><img src="'.$profileImage.'" class="boj-u-profile"><span class="boj-t-text-'.$t[2].'">&nbsp;'.$handle.'</span></a>';
+			if (in_array_any(['arena'], $o)) {
+				return '<a href="https://solved.ac/profile/'.$handle.'/arena" target="_blank" class="boj-u"><img src="https://static.solved.ac/tier_arena/'.$t[0].'.svg" class="boj-a-img" alt="'.$t[1].'"><span>&nbsp;</span><img src="'.$profileImage.'" class="boj-u-profile"><span class="boj-a-text-'.$t[2].'">&nbsp;'.$handle.'</span></a>';
+			} else {
+				return '<a href="https://solved.ac/profile/'.$handle.'" target="_blank" class="boj-u"><img src="https://static.solved.ac/tier_small/'.$t[0].'.svg" class="boj-t-img"><span>&nbsp;</span><img src="'.$profileImage.'" class="boj-u-profile"><span class="boj-t-text-'.$t[2].'">&nbsp;'.$handle.'</span></a>';
+			}
 		} else {
-			return '<a href="https://solved.ac/profile/'.$handle.'" target="_blank" class="boj-u"><img src="https://static.solved.ac/tier_small/'.$t[0].'.svg" class="boj-t-img"><span class="boj-t-text-'.$t[2].'">&nbsp;'.$handle.'</span></a>';
+			if (in_array_any(['arena'], $o)) {
+				return '<a href="https://solved.ac/profile/'.$handle.'/arena" target="_blank" class="boj-u"><img src="https://static.solved.ac/tier_arena/'.$t[0].'.svg" class="boj-a-img" alt="'.$t[1].'"><span class="boj-a-text-'.$t[2].'">&nbsp;'.$handle.'</span></a>';
+			} else {
+				return '<a href="https://solved.ac/profile/'.$handle.'" target="_blank" class="boj-u"><img src="https://static.solved.ac/tier_small/'.$t[0].'.svg" class="boj-t-img"><span class="boj-t-text-'.$t[2].'">&nbsp;'.$handle.'</span></a>';
+			}
 		}
 
 	} elseif ( $atts['p'] !== '' ) {
